@@ -17,8 +17,8 @@
 		{
 			"step": "setSiteOptions",
 			"options": {
-				"blogname": "Unidad Pastoral de San Blas",
-				"blogdescription": "Parroquias de la Unidad Pastoral de San Blas",
+				"blogname": "Unidad Pastoral del Gran San Blas",
+				"blogdescription": "San Blas · Virgen del Mar · Virgen de la Candelaria · Colegio López Vicuña",
 				"timezone_string": "Europe/Madrid",
 				"date_format": "j \\d\\e F \\d\\e Y",
 				"permalink_structure": "/%postname%/"
