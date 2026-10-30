@@ -47,7 +47,8 @@ ejecuta `-Reinstalar`.
 
 Después de la primera instalación, en el panel local:
 
-1. Avada → Options: subir el logo de San Blas y ajustar la paleta si se cambian los colores.
+1. Avada → Options: ajustar la paleta si se cambian los colores. El logo de San Blas (`plantilla/logos/`)
+   ya lo pone el blueprint en la portada; para usar la versión azul, cambiar `$color` en `plantilla/logo-san-blas.php`.
 2. Apariencia → Menús: revisar el menú principal.
 3. Sustituir los textos de cada página con los datos de `docs/datos-san-blas-a-reunir.md`.
 4. Borrar lo que sobra: páginas en borrador, las de ejemplo en inglés (Blog, Contact)

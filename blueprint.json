@@ -69,6 +69,10 @@
 		{
 			"step": "runPHP",
 			"code": "<?php require '/wordpress/wp-load.php'; global $wpdb; update_option( 'fusion_options', json_decode( file_get_contents( '/plantilla/opciones-avada.json' ), true ) ); /* Portada: la página Home, como en San Cristóbal */ $home = get_page_by_path( 'home' ); if ( $home ) { update_option( 'show_on_front', 'page' ); update_option( 'page_on_front', $home->ID ); } /* Diseño global de Avada (no viene en la exportación): cabecera y pie del maquetador */ $sec = fn( $t ) => (string) ( get_posts( array( 'post_type' => 'fusion_tb_section', 'title' => $t, 'numberposts' => 1, 'fields' => 'ids' ) )[0] ?? '' ); update_option( 'fusion_tb_layout_default', wp_slash( wp_json_encode( array( 'conditions' => array(), 'template_terms' => array( 'header' => $sec( 'Global Menu Header' ), 'footer' => $sec( 'Global Footer' ) ) ) ) ) ); /* Imágenes y vídeos: de la web de San Cristóbal a las copias locales */ $old = 'https://parroquiasdesancristobal.archimadrid.es/wp-content/uploads/'; $wpdb->query( $wpdb->prepare( \"UPDATE {$wpdb->posts} SET post_content = REPLACE( post_content, %s, %s )\", $old, wp_upload_dir()['baseurl'] . '/' ) ); if ( function_exists( 'fusion_reset_all_caches' ) ) { fusion_reset_all_caches(); }"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require '/plantilla/logo-san-blas.php';"
 		}
 	]
 }
