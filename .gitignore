@@ -1,0 +1,18 @@
+# Tema y plugins de pago (licencia de Avada): nunca al repositorio público
+privado/
+
+# Exportación original de San Cristóbal (incluye datos personales)
+exportacion-san-cristobal/
+
+# WordPress local y paquetes generados
+sitio/
+paquete/
+paquete-san-blas-*.zip
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Zips descargados (Avada y otros plugins de pago): nunca al repositorio
+*.zip

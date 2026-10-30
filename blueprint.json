@@ -1,0 +1,74 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/",
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "setSiteLanguage",
+			"language": "es_ES"
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "Unidad Pastoral de San Blas",
+				"blogdescription": "Parroquias de la Unidad Pastoral de San Blas",
+				"timezone_string": "Europe/Madrid",
+				"date_format": "j \\d\\e F \\d\\e Y",
+				"permalink_structure": "/%postname%/"
+			}
+		},
+		{
+			"step": "installTheme",
+			"themeData": {
+				"resource": "vfs",
+				"path": "/privado/Avada.zip"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "vfs",
+				"path": "/privado/fusion-core.zip"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "vfs",
+				"path": "/privado/fusion-builder.zip"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "asesor-cookies-para-la-ley-en-espana"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "wordpress-importer"
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php define( 'WP_LOAD_IMPORTERS', true ); require '/wordpress/wp-load.php'; require_once ABSPATH . 'wp-admin/includes/admin.php'; require_once WP_PLUGIN_DIR . '/wordpress-importer/wordpress-importer.php'; wp_set_current_user( 1 ); set_time_limit( 0 ); /* El PHP de Playground no reconoce el certificado de archimadrid.es: sin esto no se descargan las imágenes */ add_filter( 'http_request_args', function ( $args, $url ) { if ( str_contains( $url, 'parroquiasdesancristobal.archimadrid.es' ) ) { $args['sslverify'] = false; } return $args; }, 10, 2 ); $imp = new WP_Import(); $imp->fetch_attachments = true; ob_start(); $imp->import( '/plantilla/plantilla-san-cristobal.xml' ); ob_end_clean(); $menu = wp_get_nav_menu_object( 'menu-principal' ); if ( $menu ) { $loc = get_theme_mod( 'nav_menu_locations', array() ); $loc['main_navigation'] = $menu->term_id; set_theme_mod( 'nav_menu_locations', $loc ); }"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require '/wordpress/wp-load.php'; global $wpdb; update_option( 'fusion_options', json_decode( file_get_contents( '/plantilla/opciones-avada.json' ), true ) ); /* Portada: la página Home, como en San Cristóbal */ $home = get_page_by_path( 'home' ); if ( $home ) { update_option( 'show_on_front', 'page' ); update_option( 'page_on_front', $home->ID ); } /* Diseño global de Avada (no viene en la exportación): cabecera y pie del maquetador */ $sec = fn( $t ) => (string) ( get_posts( array( 'post_type' => 'fusion_tb_section', 'title' => $t, 'numberposts' => 1, 'fields' => 'ids' ) )[0] ?? '' ); update_option( 'fusion_tb_layout_default', wp_slash( wp_json_encode( array( 'conditions' => array(), 'template_terms' => array( 'header' => $sec( 'Global Menu Header' ), 'footer' => $sec( 'Global Footer' ) ) ) ) ) ); /* Imágenes y vídeos: de la web de San Cristóbal a las copias locales */ $old = 'https://parroquiasdesancristobal.archimadrid.es/wp-content/uploads/'; $wpdb->query( $wpdb->prepare( \"UPDATE {$wpdb->posts} SET post_content = REPLACE( post_content, %s, %s )\", $old, wp_upload_dir()['baseurl'] . '/' ) ); if ( function_exists( 'fusion_reset_all_caches' ) ) { fusion_reset_all_caches(); }"
+		}
+	]
+}
